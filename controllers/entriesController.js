@@ -7,7 +7,11 @@ const {
   deleteEntry,
   updateEntry,
 } = require("../queries/entries");
-const { checkName, checkDate } = require("../validations/checkEntries");
+const {
+  checkName,
+  checkDate,
+  checkBoolean,
+} = require("../validations/checkEntries");
 
 // INDEX
 entries.get("/", async (req, res) => {
@@ -31,7 +35,7 @@ entries.get("/:id", async (req, res) => {
 });
 
 // CREATE
-entries.post("/", checkName, checkDate, async (req, res) => {
+entries.post("/", checkName, checkDate, checkBoolean, async (req, res) => {
   const entry = await createEntry(req.body);
   if (entry) {
     res.json(entry);
@@ -52,7 +56,7 @@ entries.delete("/:id", async (req, res) => {
 });
 
 // UPDATE
-entries.put("/:id", checkName, checkDate, async (req, res) => {
+entries.put("/:id", checkName, checkDate, checkBoolean, async (req, res) => {
   const { id } = req.params;
   const updatedEntry = await updateEntry(id, req.body);
   res.status(200).json(updatedEntry);
