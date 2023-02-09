@@ -11,7 +11,9 @@ app.use(express.json());
 
 // ROUTES
 app.get(`/`, (req, res) => {
-  res.send("Welcome to Gratitude App API");
+  res.send(
+    "Welcome to Gratitude App API. Visit /entries to view your gratitude journal entries."
+  );
 });
 
 // ENTRIES ROUTES
