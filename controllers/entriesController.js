@@ -1,6 +1,12 @@
 const express = require("express");
 const entries = express.Router();
-const { getAllEntries, getEntry, createEntry } = require("../queries/entries");
+const {
+  getAllEntries,
+  getEntry,
+  createEntry,
+  deleteEntry,
+  updateEntry,
+} = require("../queries/entries");
 const { checkName, checkDate } = require("../validations/checkEntries");
 
 // INDEX
@@ -15,7 +21,7 @@ entries.get("/", async (req, res) => {
 
 // SHOW
 entries.get("/:id", async (req, res) => {
-  const { id } = req.body;
+  const { id } = req.params;
   const entry = await getEntry(id);
   if (entry) {
     res.json(entry);
@@ -32,6 +38,24 @@ entries.post("/", checkName, checkDate, async (req, res) => {
   } else {
     res.status(400).json({ error: "error" });
   }
+});
+
+// DELETE
+entries.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const deletedEntry = await deleteEntry(id);
+  if (deletedEntry.id) {
+    res.status(200).json(deletedEntry);
+  } else {
+    res.status(404).json("Bookmark not found");
+  }
+});
+
+// UPDATE
+entries.put("/:id", checkName, checkDate, async (req, res) => {
+  const { id } = req.params;
+  const updatedEntry = await updateEntry(id, req.body);
+  res.status(200).json(updatedEntry);
 });
 
 module.exports = entries;

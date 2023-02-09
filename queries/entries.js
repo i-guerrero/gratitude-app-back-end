@@ -41,4 +41,43 @@ const createEntry = async (entry) => {
   }
 };
 
-module.exports = { getAllEntries, getEntry, createEntry };
+const deleteEntry = async (id) => {
+  try {
+    const deletedEntry = await db.one(
+      "DELETE FROM entries WHERE id = $1 RETURNING *",
+      id
+    );
+    return deletedEntry;
+  } catch (error) {
+    return error;
+  }
+};
+
+const updateEntry = async (id, entry) => {
+  try {
+    const updatedEntry = await db.one(
+      "UPDATE entries SET name=$1, date=$2, person=$3, place=$4, thing=$5, notes=$6, photo_url=$7 WHERE id=$8 RETURNING *",
+      [
+        entry.name,
+        entry.date,
+        entry.person,
+        entry.place,
+        entry.thing,
+        entry.notes,
+        entry.photo_url,
+        id,
+      ]
+    );
+    return updatedEntry;
+  } catch (error) {
+    return error;
+  }
+};
+
+module.exports = {
+  getAllEntries,
+  getEntry,
+  createEntry,
+  deleteEntry,
+  updateEntry,
+};
